@@ -1,5 +1,5 @@
 # encoding: UTF-8
-puts  __ENCODING__.name
+puts __ENCODING__.name
 str = "Rüby"
 puts str.encoding.name
 str_in_western_iso = str.encode("iso-8859-1")
