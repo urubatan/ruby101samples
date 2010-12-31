@@ -1,0 +1,10 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    rdiscount (1.6.5)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  rdiscount

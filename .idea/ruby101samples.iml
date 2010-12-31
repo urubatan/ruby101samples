@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RUBY_MODULE" version="4">
+  <component name="GemRequirementsHolder" version="3">
+    <requirement>
+      <requirement>
+        <dependency name="rdiscount" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+  </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] rake (v0.8.7, C:/Documents and Settings/Urubatan/.bundle/ruby/1.8/gems/rake-0.8.7)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] bundler (v1.0.0.rc.3, C:/Devel/Ruby/lib/ruby/gems/1.8/gems/bundler-1.0.0.rc.3)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rdiscount (v1.6.5, C:/Devel/Ruby/lib/ruby/gems/1.8/gems/rdiscount-1.6.5)" level="application" />
   </component>
 </module>
 
