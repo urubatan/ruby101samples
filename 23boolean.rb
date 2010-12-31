@@ -1,10 +1,10 @@
 #encoding: UTF-8
 def testa_valor(val)
-	if val
-		print "#{val} é considerado verdadeiro pelo Ruby\n"
-	else
-		print "#{val} é considerado falso pelo Ruby\n"
-	end
+  if val
+    print "#{val} é considerado verdadeiro pelo Ruby\n"
+  else
+    print "#{val} é considerado falso pelo Ruby\n"
+  end
 end
 
 testa_valor true

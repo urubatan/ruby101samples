@@ -1,7 +1,7 @@
 def recebe_proc(&block)
-	if block
-		block.call
-	end
+  if block
+    block.call
+  end
 end
 
 recebe_proc
