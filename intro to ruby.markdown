@@ -1,86 +1,68 @@
-<h2>Interactive Ruby</h2>
+## Interactive Ruby
 No início dessa jornada pelo Ruby, vamos utilizar o irb, sigla em inglês para “Interactive Ruby” (Ruby Interativo). Esse utilitário é muito usado para testar códigos antes de passá-los para o arquivo de destino, permitindo um teste mais rápido e, portanto, uma correção mais rápida dos possíveis problemas. Abra um terminal e digite irb. Você verá um prompt como este:
-<pre lang="ruby" line="1">
-irb(main):001:0> 
-</pre>
+
+    irb(main):001:0> 
+
 Agora, você está pronto para começar a utilizar o Ruby como uma calculadora!
 Lembre-se de que todos os comandos mostrados nas próximas páginas podem ser testados neste aplicativo. Então, vamos aprender um pouco sobre o irb antes de continuar.
 Se você digitar 1+1 e pressionar Enter, na próxima linha vai aparecer:
-=> 2
+
+    => 2
+
 e o prompt muda para:
-<pre lang="ruby" line="1">
-irb(main):002:0> 
-</pre>
+
+    irb(main):002:0> 
+
 Ou seja, os números entre os dois pontos são correspondentes à linha do comando, como se fosse a linha do arquivo na edição de um arquivo .rb (extensão padrão para programas Ruby). Também podemos concluir que toda e qualquer expressão em Ruby tem um valor de retorno, que é mostrado no irb, no caso o => 2, que é o resultado da soma realizada.
-O último número é o nível do bloco atual. Veremos isso mais adiante.
+
+O último número é o nível do bloco atual.
+
 No Ruby, tudo é um objeto, incluindo números. O que fizemos neste exemplo foi enviar a mensagem + para o objeto 1, com o argumento 1, e essa mensagem retorna um resultado que é a soma desses números, no caso 2. Esse conceito de enviar mensagens para objetos vai ser muito importante mais adiante.
-Para definir um método no Ruby, utiliza-se a palavra-chave def como no exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):002:0> def soma a, b 
-irb(main):003:1> a + b 
-irb(main):004:1> end 
-=> nil 
-irb(main):005:0> soma 1, 2 
-=> 3 
-</pre>
+
+## Introdução ao Ruby
+
+Todos os códigos apresentados, você podera escrever linha a linha no IRB para ver o que acontece a cada linha, para facilitar a escrita do tutorial e a posterior atualização do mesmo, vou colocar todos os códigos em arquivos .rb, para executar estes arquivos, salve o arquivo e execute: ruby <nome do arquivo.rb> e você vera o resultado da execução no console.
+
+Vamos começar com o básico do básico, como definir um método no ruby, na verdade não estamos definindo um método, estamos registrando um endereço para que o carteiro interno do ruby possa entregar mensagens a um objeto, estamos definindo os nomes das mensagens que este objeto pode receber, mas para fazer isto, utiliza-se a palagra "def" como no exemplo a seguir:
+
+{{01soma.rb}}
+
 No Ruby não é necessário utilizar return ou qualquer palavra-chave para definir o retorno de um método. O retorno do método é o valor da última expressão executada, em nosso caso, a+b.
+
 Os parênteses são opcionais em quase todas as situações. Por exemplo, poderíamos reescrever o exemplo anterior da seguinte forma:
-<pre lang="ruby" line="1">
-irb(main):006:0> def soma(a, b) 
-irb(main):007:1> a + b; 
-irb(main):008:1* end 
-=> nil 
-irb(main):009:0> soma(1,2) 
-=> 3 
-</pre>
+
+{{02soma.rb}}
+
 Como podemos verificar no exemplo, além dos parênteses, o “;” no final das sentenças também é opcional, tornando a sintaxe bastante flexível.
+
 No Ruby, tudo é um objeto, e todo objeto pertence a uma classe. Todas as classes descendem de Object, e é possível verificar em tempo de execução qual o tipo do objeto, como pode ser visto a seguir:
-<pre lang="ruby" line="1">
-irb(main):010:0> 1.class 
-=> Fixnum 
-irb(main):011:0> self.class 
-=> Object 
-irb(main):012:0> [].class 
-=> Array 
-irb(main):013:0> {}.class 
-=> Hash 
-irb(main):014:0> "a".class 
-=> String 
-irb(main):015:0> 1.1.class 
-=> Float 
-irb(main):016:0> 99999999999999999999.class 
-=> Bignum 
-</pre>
+
+{{03objects.rb}}
+
 A palavra-chave self é utilizada para identificar o objeto atual, o número 1 é do tipo Fixnum, o número 1.1 é do tipo Float e um número muito grande é do tipo Bignum. Não é necessário se preocupar se um número é Fixnum ou Bignum, pois o Ruby vai cuidar das conversões automaticamente.
+
 Ok, mas em que saber isso pode ser útil? Fácil: a classe Fixnum, por consequência, a instância dessa classe 1, tem diversos métodos úteis para trabalhar com números, e graças ao irb, não precisamos decorar todos os métodos.
-<pre lang="ruby" line="1">
-irb(main):021:0> 1.methods 
-=> ["%", "inspect", "soma", "<<", "singleton_method_added", "&", "clone", ">>", "round", "method", "public_methods", "instance_variable_defined?", "divmod", "equal?", "freeze", "integer?", "chr", "*", "+", "to_i", "methods", "respond_to?", "-", "upto", "between?", "prec", "truncate", "/", "dup", "instance_variables", "__id__", "modulo", "succ", "|", "eql?", "object_id", "zero?", "require", "gem", "~", "id", "to_f", "singleton_methods", "send", "prec_i", "taint", "step", "to_int", "frozen?", "instance_variable_get", "__send__", "^", "instance_of?", "remainder", "to_a", "+@", "nonzero?", "-@", "type", "**", "floor", "<", "protected_methods", "<=>", "instance_eval", "display", "==", "prec_f", "quo", ">", "===", "downto", "id2name", "size", "instance_variable_set", "kind_of?", "abs", "extend", ">=", "next", "to_s", "<=", "coerce", "hash", "ceil", "class", "tainted?", "=~", "private_methods", "div", "nil?", "untaint", "times", "to_sym", "[]", "is_a?"] 
-</pre>
+
+{{04methods.rb}}
+
 A classe Object tem o método methods, que retorna um Array contendo todos os métodos disponíveis para aquele objeto, neste caso, o número 1.
+
 Como podemos verificar pelo resultado do método methods, as operações matemáticas também são métodos da classe Fixnum, como o +, *, -, / e assim por diante.
+
+## Classes abertas em tempo de execução
+
 O Ruby tem um recurso bastante interessante, que o torna uma linguagem muito flexível. Esse recurso se chama “open classes”, ou seja, todas as classes do Ruby estão sempre abertas, o que possibilita que elas sejam alteradas a qualquer momento. Isso é bastante útil, mas também bastante perigoso. Para demonstrar o perigo que isso representa em mãos incautas, faremos uma pequena brincadeira:
-<pre lang="ruby" line="1">
-irb(main):022:0> class Fixnum 
-irb(main):023:1> def +(other) 
-irb(main):024:2> self - other 
-irb(main):025:2> end 
-irb(main):026:1> end 
-=> nil 
-irb(main):027:0> 1 + 5 
-=> -4 
-</pre>
+
+{{05openclass.rb}}
+
 O que acabamos de fazer foi alterar o método + da classe Fixnum, o que pode causar uma grande confusão, como visto no exemplo, fazendo com que o método + realize, na verdade, uma operação de subtração. No entanto, esse recurso, quando utilizado corretamente, pode ajudar bastante no desenvolvimento de aplicações, como veremos mais adiante.
-Variáveis e escopo
+
+##Variáveis e escopo
+
 No Ruby, não é necessário declarar uma variável: ela será definida no momento em que tiver um valor atribuído. Para que isso seja possível, o Ruby utiliza tipagem dinâmica, ou seja, ele define o tipo de uma variável por seu valor, mas isso não quer dizer que seja uma linguagem de tipagem fraca, pois não é possível somar um número com uma string, como pode ser visto no seguinte código-fonte:
-<pre lang="ruby" line="1">
-irb(main):024:0> 1 + "2" 
-TypeError: String can't be coerced into Fixnum 
-	from (irb):24:in `-' 
-	from (irb):24:in `+' 
-	from (irb):24 
-	from :0 
-</pre>
+
+{{06strongtype.rb}}
+
 O Ruby não tem palavras-chave para definir o escopo de variáveis: isso é feito por meio de símbolos, como na lista a seguir:
 Símbolo	Descrição
 nome	Variável local.
