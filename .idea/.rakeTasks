@@ -4,4 +4,4 @@ You are allowed to:
 1. Remove rake task
 2. Add existing rake tasks
 To add existing rake tasks automatically delete this file and reload the project.
---><RakeGroup description="" fullCmd="" taksId="rake"><RakeTask description="Executes all .rb files to verify if they are correctly spelled" fullCmd="runall" taksId="runall" /></RakeGroup></Settings>
+--><RakeGroup description="" fullCmd="" taksId="rake"><RakeTask description="Merge all the markdown files and the source files" fullCmd="merge" taksId="merge" /><RakeTask description="Executes all .rb files to verify if they are correctly spelled" fullCmd="runall" taksId="runall" /><RakeTask description="Internal task to setup bundler, user as dependency" fullCmd="setup_bundler" taksId="setup_bundler" /></RakeGroup></Settings>
