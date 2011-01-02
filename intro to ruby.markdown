@@ -1,3 +1,4 @@
+<h2>Interactive Ruby</h2>
 No início dessa jornada pelo Ruby, vamos utilizar o irb, sigla em inglês para “Interactive Ruby” (Ruby Interativo). Esse utilitário é muito usado para testar códigos antes de passá-los para o arquivo de destino, permitindo um teste mais rápido e, portanto, uma correção mais rápida dos possíveis problemas. Abra um terminal e digite irb. Você verá um prompt como este:
 <pre lang="ruby" line="1">
 irb(main):001:0> 
