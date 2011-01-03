@@ -1,116 +1,99 @@
-## Interactive Ruby
+<h2>Interactive Ruby</h2>
 No início dessa jornada pelo Ruby, vamos utilizar o irb, sigla em inglês para “Interactive Ruby” (Ruby Interativo). Esse utilitário é muito usado para testar códigos antes de passá-los para o arquivo de destino, permitindo um teste mais rápido e, portanto, uma correção mais rápida dos possíveis problemas. Abra um terminal e digite irb. Você verá um prompt como este:
-
-    irb(main):001:0> 
-
+<pre line="1">
+irb(main):001:0> 
+</pre>
 Agora, você está pronto para começar a utilizar o Ruby como uma calculadora!
 Lembre-se de que todos os comandos mostrados nas próximas páginas podem ser testados neste aplicativo. Então, vamos aprender um pouco sobre o irb antes de continuar.
 Se você digitar 1+1 e pressionar Enter, na próxima linha vai aparecer:
-
-    => 2
-
+<pre line="1">
+=> 2
+</pre>
 e o prompt muda para:
-
-    irb(main):002:0> 
-
+<pre line="1">
+irb(main):002:0> 
+</pre>
 Ou seja, os números entre os dois pontos são correspondentes à linha do comando, como se fosse a linha do arquivo na edição de um arquivo .rb (extensão padrão para programas Ruby). Também podemos concluir que toda e qualquer expressão em Ruby tem um valor de retorno, que é mostrado no irb, no caso o => 2, que é o resultado da soma realizada.
 
 O último número é o nível do bloco atual.
 
 No Ruby, tudo é um objeto, incluindo números. O que fizemos neste exemplo foi enviar a mensagem + para o objeto 1, com o argumento 1, e essa mensagem retorna um resultado que é a soma desses números, no caso 2. Esse conceito de enviar mensagens para objetos vai ser muito importante mais adiante.
 
-## Introdução ao Ruby
+<h2>Introdução ao Ruby</h2>
 
 Todos os códigos apresentados, você podera escrever linha a linha no IRB para ver o que acontece a cada linha, para facilitar a escrita do tutorial e a posterior atualização do mesmo, vou colocar todos os códigos em arquivos .rb, para executar estes arquivos, salve o arquivo e execute: ruby <nome do arquivo.rb> e você vera o resultado da execução no console.
 
 Vamos começar com o básico do básico, como definir um método no ruby, na verdade não estamos definindo um método, estamos registrando um endereço para que o carteiro interno do ruby possa entregar mensagens a um objeto, estamos definindo os nomes das mensagens que este objeto pode receber, mas para fazer isto, utiliza-se a palagra "def" como no exemplo a seguir:
 
-{{01soma.rb}}
+{{00/01soma.rb}}
 
 No Ruby não é necessário utilizar return ou qualquer palavra-chave para definir o retorno de um método. O retorno do método é o valor da última expressão executada, em nosso caso, a+b.
 
 Os parênteses são opcionais em quase todas as situações. Por exemplo, poderíamos reescrever o exemplo anterior da seguinte forma:
 
-{{02soma.rb}}
+{{00/02soma.rb}}
 
 Como podemos verificar no exemplo, além dos parênteses, o “;” no final das sentenças também é opcional, tornando a sintaxe bastante flexível.
 
 No Ruby, tudo é um objeto, e todo objeto pertence a uma classe. Todas as classes descendem de Object, e é possível verificar em tempo de execução qual o tipo do objeto, como pode ser visto a seguir:
 
-{{03objects.rb}}
+{{00/03objects.rb}}
 
 A palavra-chave self é utilizada para identificar o objeto atual, o número 1 é do tipo Fixnum, o número 1.1 é do tipo Float e um número muito grande é do tipo Bignum. Não é necessário se preocupar se um número é Fixnum ou Bignum, pois o Ruby vai cuidar das conversões automaticamente.
 
 Ok, mas em que saber isso pode ser útil? Fácil: a classe Fixnum, por consequência, a instância dessa classe 1, tem diversos métodos úteis para trabalhar com números, e graças ao irb, não precisamos decorar todos os métodos.
 
-{{04methods.rb}}
+{{00/04methods.rb}}
 
 A classe Object tem o método methods, que retorna um Array contendo todos os métodos disponíveis para aquele objeto, neste caso, o número 1.
 
 Como podemos verificar pelo resultado do método methods, as operações matemáticas também são métodos da classe Fixnum, como o +, *, -, / e assim por diante.
 
-## Classes abertas em tempo de execução
+<h2>Classes abertas em tempo de execução</h2>
 
 O Ruby tem um recurso bastante interessante, que o torna uma linguagem muito flexível. Esse recurso se chama “open classes”, ou seja, todas as classes do Ruby estão sempre abertas, o que possibilita que elas sejam alteradas a qualquer momento. Isso é bastante útil, mas também bastante perigoso. Para demonstrar o perigo que isso representa em mãos incautas, faremos uma pequena brincadeira:
 
-{{05openclass.rb}}
+{{00/05openclass.rb}}
 
 O que acabamos de fazer foi alterar o método + da classe Fixnum, o que pode causar uma grande confusão, como visto no exemplo, fazendo com que o método + realize, na verdade, uma operação de subtração. No entanto, esse recurso, quando utilizado corretamente, pode ajudar bastante no desenvolvimento de aplicações, como veremos mais adiante.
 
-##Variáveis e escopo
+<h2>Variáveis e escopo</h2>
 
 No Ruby, não é necessário declarar uma variável: ela será definida no momento em que tiver um valor atribuído. Para que isso seja possível, o Ruby utiliza tipagem dinâmica, ou seja, ele define o tipo de uma variável por seu valor, mas isso não quer dizer que seja uma linguagem de tipagem fraca, pois não é possível somar um número com uma string, como pode ser visto no seguinte código-fonte:
 
-{{06strongtype.rb}}
+{{00/06strongtype.rb}}
+
+Se você executar este código, recebera um erro, informando que não é possível misturar variáveis de tipos diferentes.
 
 O Ruby não tem palavras-chave para definir o escopo de variáveis: isso é feito por meio de símbolos, como na lista a seguir:
-Símbolo	Descrição
-nome	Variável local.
-@nome	Variável de instância.
-@@nome	Variável de classe.
-$nome	Variável global.
-Tipos básicos do Ruby
-Blocos de código
+<table width="100%" border="1">
+<tr><th>Símbolo</th><th>Descrição</th></tr>
+<tr><td>nome</td><td>Variável local.</td></tr>
+<tr><td>@nome</td><td>Variável de instância.</td></tr>
+<tr><td>@@nome</td><td>Variável de classe.</td></tr>
+<tr><td>$nome</td><td>Variável global.</td></tr>
+</table>
+
+<h2>Tipos básicos do Ruby</h2>
+<h3>Blocos de código</h3>
 Blocos de código consistem em um dos recursos mais versáteis e flexíveis do Ruby. São utilizados para iterar em coleções, personalizar o comportamento de algum método e definir “Domain Specific Languages”. Para quase tudo são usados blocos de código, até para criar formulários para páginas da web no Rails e definir boa parte das configurações do framework.
+
 Existem duas sintaxes diferentes para definir um bloco de código. Pode-se fazer isso utilizando os símbolos { e } ou utilizando as palavras-chave do e end.
+
 Blocos de código podem receber parâmetros. Para definir a lista de parâmetros, logo depois de aberto o bloco de código é utilizado o símbolo | para demarcar o início e o fim da lista de parâmetros.
+
 O Ruby tem suporte a closures reais. Isso quer dizer que, se em um bloco de código forem utilizadas variáveis visíveis no contexto da criação do bloco, qualquer alteração nessas variáveis vai ser refletida no contexto original, ou seja, os blocos de código têm um link com o contexto de origem, o que os torna mais úteis ainda e os diferencia muito de ponteiros para métodos do C/C++, por exemplo.
-<pre lang="ruby" line="1">
-irb(main):001:0> arr = [1,2,3,4] 
-=> [1, 2, 3, 4] 
-irb(main):002:0> arr.each { |val| 
-irb(main):003:1* print "#{val}\n" 
-irb(main):004:1> } 
-1 
-2 
-3 
-4 
-=> [1, 2, 3, 4] 
-</pre>
+
+{{00/07codeblock.rb}}
+
 Esse exemplo utiliza um bloco de código simples, delimitado por chaves para iterar nos valores de um array. Veja que o valor do array não foi alterado pelo retorno da expressão.
-<pre lang="ruby" line="1">
-irb(main):001:0> arr = [1,2,3,4] 
-=> [1, 2, 3, 4] 
-irb(main):002:0> arr.each_with_index do |val, idx| 
-irb(main):003:1* print "Posição #{idx} valor #{val}\n" 
-irb(main):004:1> end 
-Posição 0 valor 1 
-Posição 1 valor 2 
-Posição 2 valor 3 
-Posição 3 valor 4 
-=> [1, 2, 3, 4] 
-</pre>
+
+{{00/08codeblock.rb}}
+
 Esse segundo exemplo faz praticamente a mesma coisa, mas utiliza outro método de iteração, que passa além do valor. O índice fornece o valor no array e, dessa vez, são utilizados os delimitadores do e end.
-<pre lang="ruby" line="1">
-irb(main):005:0> valor = 1 
-=> 1 
-irb(main):006:0> arr.each do |val| 
-irb(main):007:1* valor += val 
-irb(main):008:1> end 
-=> [1, 2, 3, 4] 
-irb(main):009:0> valor 
-=> 11
-</pre> 
+
+{{00/09closure.rb}}
+
 Já nesse exemplo é utilizada uma closure, em vez de um bloco de código simples. A diferença básica é que a closure mantém o contexto de onde ela é chamada, neste caso, alterando a variável local valor. Podemos ver no próximo exemplo que, se for utilizado um método para realizar essa iteração, a variável valor não vai existir, o que vai causar um erro que prova que o bloco aponta para seu contexto de origem.
 <pre lang="ruby" line="1">
 irb(main):021:0> valor = 1 
