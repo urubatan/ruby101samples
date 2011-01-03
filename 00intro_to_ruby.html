@@ -25,25 +25,25 @@ Todos os códigos apresentados, você podera escrever linha a linha no IRB para 
 
 Vamos começar com o básico do básico, como definir um método no ruby, na verdade não estamos definindo um método, estamos registrando um endereço para que o carteiro interno do ruby possa entregar mensagens a um objeto, estamos definindo os nomes das mensagens que este objeto pode receber, mas para fazer isto, utiliza-se a palagra "def" como no exemplo a seguir:
 
-{{00/01soma.rb}}
+{{intro/01soma.rb}}
 
 No Ruby não é necessário utilizar return ou qualquer palavra-chave para definir o retorno de um método. O retorno do método é o valor da última expressão executada, em nosso caso, a+b.
 
 Os parênteses são opcionais em quase todas as situações. Por exemplo, poderíamos reescrever o exemplo anterior da seguinte forma:
 
-{{00/02soma.rb}}
+{{intro/02soma.rb}}
 
 Como podemos verificar no exemplo, além dos parênteses, o “;” no final das sentenças também é opcional, tornando a sintaxe bastante flexível.
 
 No Ruby, tudo é um objeto, e todo objeto pertence a uma classe. Todas as classes descendem de Object, e é possível verificar em tempo de execução qual o tipo do objeto, como pode ser visto a seguir:
 
-{{00/03objects.rb}}
+{{intro/03objects.rb}}
 
 A palavra-chave self é utilizada para identificar o objeto atual, o número 1 é do tipo Fixnum, o número 1.1 é do tipo Float e um número muito grande é do tipo Bignum. Não é necessário se preocupar se um número é Fixnum ou Bignum, pois o Ruby vai cuidar das conversões automaticamente.
 
 Ok, mas em que saber isso pode ser útil? Fácil: a classe Fixnum, por consequência, a instância dessa classe 1, tem diversos métodos úteis para trabalhar com números, e graças ao irb, não precisamos decorar todos os métodos.
 
-{{00/04methods.rb}}
+{{intro/04methods.rb}}
 
 A classe Object tem o método methods, que retorna um Array contendo todos os métodos disponíveis para aquele objeto, neste caso, o número 1.
 
@@ -53,7 +53,7 @@ Como podemos verificar pelo resultado do método methods, as operações matemá
 
 O Ruby tem um recurso bastante interessante, que o torna uma linguagem muito flexível. Esse recurso se chama “open classes”, ou seja, todas as classes do Ruby estão sempre abertas, o que possibilita que elas sejam alteradas a qualquer momento. Isso é bastante útil, mas também bastante perigoso. Para demonstrar o perigo que isso representa em mãos incautas, faremos uma pequena brincadeira:
 
-{{00/05openclass.rb}}
+{{intro/05openclass.rb}}
 
 O que acabamos de fazer foi alterar o método + da classe Fixnum, o que pode causar uma grande confusão, como visto no exemplo, fazendo com que o método + realize, na verdade, uma operação de subtração. No entanto, esse recurso, quando utilizado corretamente, pode ajudar bastante no desenvolvimento de aplicações, como veremos mais adiante.
 
@@ -61,7 +61,7 @@ O que acabamos de fazer foi alterar o método + da classe Fixnum, o que pode cau
 
 No Ruby, não é necessário declarar uma variável: ela será definida no momento em que tiver um valor atribuído. Para que isso seja possível, o Ruby utiliza tipagem dinâmica, ou seja, ele define o tipo de uma variável por seu valor, mas isso não quer dizer que seja uma linguagem de tipagem fraca, pois não é possível somar um número com uma string, como pode ser visto no seguinte código-fonte:
 
-{{00/06strongtype.rb}}
+{{intro/06strongtype.rb}}
 
 Se você executar este código, recebera um erro, informando que não é possível misturar variáveis de tipos diferentes.
 
@@ -84,646 +84,332 @@ Blocos de código podem receber parâmetros. Para definir a lista de parâmetros
 
 O Ruby tem suporte a closures reais. Isso quer dizer que, se em um bloco de código forem utilizadas variáveis visíveis no contexto da criação do bloco, qualquer alteração nessas variáveis vai ser refletida no contexto original, ou seja, os blocos de código têm um link com o contexto de origem, o que os torna mais úteis ainda e os diferencia muito de ponteiros para métodos do C/C++, por exemplo.
 
-{{00/07codeblock.rb}}
+{{intro/07codeblock.rb}}
 
 Esse exemplo utiliza um bloco de código simples, delimitado por chaves para iterar nos valores de um array. Veja que o valor do array não foi alterado pelo retorno da expressão.
 
-{{00/08codeblock.rb}}
+{{intro/08codeblock.rb}}
 
 Esse segundo exemplo faz praticamente a mesma coisa, mas utiliza outro método de iteração, que passa além do valor. O índice fornece o valor no array e, dessa vez, são utilizados os delimitadores do e end.
 
-{{00/09closure.rb}}
+{{intro/09closure.rb}}
 
 Já nesse exemplo é utilizada uma closure, em vez de um bloco de código simples. A diferença básica é que a closure mantém o contexto de onde ela é chamada, neste caso, alterando a variável local valor. Podemos ver no próximo exemplo que, se for utilizado um método para realizar essa iteração, a variável valor não vai existir, o que vai causar um erro que prova que o bloco aponta para seu contexto de origem.
-<pre lang="ruby" line="1">
-irb(main):021:0> valor = 1 
-=> 1 
-irb(main):022:0> def iterar 
-irb(main):023:1> arr = [1,2,3,4] 
-irb(main):024:1> arr.each do |val| 
-irb(main):025:2* valor += val 
-irb(main):026:2> end 
-irb(main):027:1> end 
-=> nil 
-irb(main):028:0> iterar 
-NoMethodError: undefined method `+' for nil:NilClass 
-	from (irb):25:in `iterar' 
-	from (irb):24:in `each' 
-	from (irb):24:in `iterar' 
-	from (irb):28 
-	from :0 
-</pre>
-Esse exemplo também demonstra uma das convenções para a nomenclatura de variáveis apresentada no exemplo anterior, ou seja, variáveis que não têm seus nomes iniciados por @, @@ ou $ são variáveis locais no contexto onde foram definidas.
-É possível também passar blocos de código como parâmetros para métodos. Isso é muito usado na API padrão do Ruby, e pode ser visto inclusive no exemplo anterior, quando passamos um bloco de código como parâmetro para o método each da classe Array. No próximo exemplo, veremos como criar um método que recebe um bloco de código como parâmetro, ou seja, como utilizar um bloco de código passado para um método. Não será mostrado como armazenar um bloco de código em uma variável, porque nesse caso, o bloco de código se transforma em uma instância da classe Proc e esse é um assunto para o próximo capítulo.
-<pre lang="ruby" line="1">
-irb(main):001:0> def recebe_proc_e_passa_parametro 
-irb(main):002:1> if block_given? 
-irb(main):003:2> yield 
-irb(main):004:2> else 
-irb(main):005:2* puts "você precisa passar um bloco para este método\n" 
-irb(main):006:2> end 
-irb(main):007:1> end 
-=> nil 
-irb(main):008:0> recebe_proc_e_passa_parametro 
-você precisa passar um bloco para este método 
-=> nil 
-irb(main):009:0> recebe_proc_e_passa_parametro { print "dentro do bloco\n" } 
-dentro do bloco 
-=> nil 
-</pre>
-Podemos também passar parâmetros para blocos recebidos nos métodos:
-<pre lang="ruby" line="1">
-irb(main):010:0> def recebe_proc_e_passa_parametro 
-irb(main):011:1> if block_given? 
-irb(main):012:2> yield(23) 
-irb(main):013:2> else 
-irb(main):014:2* puts "você precisa passar um bloco para este método\n" 
-irb(main):015:2> end 
-irb(main):016:1> end 
-=> nil 
-irb(main):017:0> recebe_proc_e_passa_parametro do |par| 
-irb(main):018:1* puts "Recebi #{par} dentro deste bloco\n" 
-irb(main):019:1> end 
-Recebi 23 dentro deste bloco 
-=> nil 
-</pre>
-Procs
-Procs são muito parecidos com blocos de código ou closures simples, que foram vistos na seção anterior. A diferença básica é que podemos armazenar um proc em uma variável, e isso torna um pouco mais “caro” para o Ruby a implementação de procs do que simples blocos de código. Por isso, tiveram a brilhante ideia de, internamente no Ruby, utilizar dois elementos diferentes para representar essas duas entidades que, para o programador usuário da linguagem, são praticamente iguais.
-Além disso, o Ruby converte blocos de código em procs de forma transparente, fazendo com que na maioria das situações não seja necessário se preocupar com esse tipo de detalhe. Para deixar isso um pouco mais claro veremos alguns exemplos a seguir:
-Converter um bloco recebido em um proc.
-<pre lang="ruby" line="1">
-irb(main):020:0> def recebe_proc(&block) 
-irb(main):021:1> if block 
-irb(main):022:2> block.call 
-irb(main):023:2> end 
-irb(main):024:1> end 
-=> nil 
-irb(main):025:0> recebe_proc 
-=> nil 
-irb(main):026:0> recebe_proc { print "este bloco vai se tornar uma proc pois vai ser atribuído a uma variável no método" } 
-este bloco vai se tornar uma proc pois vai ser atribuído a uma variável no método
-=> nil 
-</pre>
-Criar uma variável do tipo Proc de duas formas diferentes.
-<pre lang="ruby" line="1">
-irb(main):027:0> p = Proc.new { print "este bloco vai se tornar uma proc pois está sendo atribuído a uma variável\n" } 
-=> #<Proc:0xb7b52c70@(irb):27> 
-irb(main):028:0> p.call 
-este bloco vai se tornar uma proc pois está sendo atribuído a uma variável 
-=> nil 
-irb(main):029:0> p1 = lambda do 
-irb(main):030:1* print "este bloco vai se tornar uma proc pois está sendo atribuído a uma variável\n" 
-irb(main):031:1> end 
-=> #<Proc:0xb7b42424@(irb):29> 
-irb(main):032:0> p1.call 
-este bloco vai se tornar uma proc pois está sendo atribuído a uma variável 
-=> nil 
-</pre>
-Nesse exemplo, foi possível verificar as duas formas de criar um objeto do tipo Proc: utilizando o construtor da classe Proc (leia mais sobre construtores na seção sobre classes) ou utilizando a palavra-chave lambda, de modo semelhante ao Python.
-Como Proc é uma classe, objetos desse tipo têm diversos métodos. Vejamos alguns destes de forma mais detalhada:
-<pre lang="ruby" line="1">
-irb(main):035:0* p = Proc.new { print "a" } 
-=> #<Proc:0xb7c9a13c@(irb):35> 
-irb(main):036:0> p.methods.sort 
-=> ["==", "===", "=~", "[]", "__id__", "__send__", "arity", "binding", "call", "class", "clone", "display", "dup", "eql?", "equal?", "extend", "freeze", "frozen?", "gem", "hash", "id", "inspect", "instance_eval", "instance_of?", "instance_variable_defined?", "instance_variable_get", "instance_variable_set", "instance_variables", "is_a?", "kind_of?", "method", "methods", "nil?", "object_id", "private_methods", "protected_methods", "public_methods", "recebe_proc", "recebe_proc_e_passa_parametro", "require", "respond_to?", "send", "singleton_methods", "taint", "tainted?", "to_a", "to_proc", "to_s", "type", "untaint"]
-</pre>
-Diversos métodos padrão da classe Object do Ruby são listados, pois como todas as classes, a classe Proc também é descendente de Object, ou seja, procs são objetos comuns no Ruby. Retomando o tópico anterior, existem alguns métodos que são mais interessantes para nós neste momento:
-Método	Descrição
-call	Utilizado para executar o proc, os parâmetros que forem definidos no bloco são passados como parâmetros para o método call.
-[]	Alias para o método call, ou seja, podemos executar um proc com a sintaxe: p[parâmetros].
-arity	Informa o número de parâmetros definidos nesse proc.
-binding	Retorna a Binding correspondente ao local onde foi definido o bloco de código que deu origem a esse proc.
-Números
-Como em todas as linguagens de programação, o Ruby tem suporte a processamento numérico, mas diferente de muitas das linguagens, mesmo algumas das supostamente orientadas a objetos, no Ruby todos os números são objetos, portanto, todos são instâncias de alguma classe.
-O Ruby tem três classes que representam números. São elas:
-Classe	Descrição
-Fixnum	Representa inteiros de -1073741824 a 1073741823.
-Bignum	Representa inteiros fora do intervalo da classe Fixnum.
-Float	Representa números de ponto flutuante.
-Para definir um número de ponto flutuante basta utilizar um ponto “.”. Se você quiser muito separar milhares, pode utilizar o _, mas não recomendo a utilização, pois o visual da sintaxe fica poluído.
-A seguir estão alguns exemplos de números no Ruby.
-<pre lang="ruby" line="1">
-irb(main):066:0> i=1 
-=> 1 
-irb(main):067:0> i.class 
-=> Fixnum 
-irb(main):068:0> i1 = 1.1 
-=> 1.1 
-irb(main):069:0> i1.class 
-=> Float 
-irb(main):070:0> i2=111_222_333 
-=> 111222333 
-irb(main):071:0> i2.class 
-=> Fixnum 
-irb(main):072:0> i3=999999999999999999 
-=> 999999999999999999 
-irb(main):073:0> i3.class 
-=> Bignum 
-</pre>
-Como já foi dito, o Ruby utiliza duas classes diferentes para tratar inteiros. Não é necessário se preocupar com isso, pois a conversão entre esses tipos é feita automaticamente pelo interpretador, ou seja, se um número ficar grande demais para caber em um Fixnum, ele será convertido para Bignum. Caso ele volte a estar no intervalo do Fixnum, essa classe será utilizada novamente.
-Valores booleanos
-Valores booleanos, como na maior parte das linguagens de programação, são representados por true e false, ou verdadeiro e falso, respectivamente. Entretanto, no Ruby existe uma particularidade: a palavra-chave nil, que representa “nenhum objeto”, é considerada como falsa em qualquer comparação. Portanto, existem dois valores para falso, e quaisquer outros valores serão considerados como verdadeiros. Resumindo, as comparações booleanas servem também para verificar se uma variável tem um valor.
-Veja alguns exemplos que exemplificam melhor o que você acabou de ler:
-<pre lang="ruby" line="1">
-irb(main):078:0* def testa_valor(val) 
-irb(main):079:1> if val 
-irb(main):080:2> print "#{val} é considerado verdadeiro pelo Ruby\n" 
-irb(main):081:2> else 
-irb(main):082:2* print "#{val} é considerado falso pelo Ruby\n" 
-irb(main):083:2> end 
-irb(main):084:1> end 
-=> nil 
-irb(main):085:0> testa_valor true 
-true é considerado verdadeiro pelo Ruby 
-=> nil 
-irb(main):086:0> testa_valor false 
-false é considerado falso pelo Ruby 
-=> nil 
-irb(main):087:0> testa_valor 1 
-1 é considerado verdadeiro pelo Ruby 
-=> nil 
-irb(main):088:0> testa_valor "asda" 
-asda é considerado verdadeiro pelo Ruby 
-=> nil 
-irb(main):089:0> testa_valor nil 
- é considerado falso pelo Ruby 
-=> nil 
-</pre>
-Strings
-Strings são o tipo de dados utilizados para representar texto dentro do código. O Ruby tem dois tipos de string, que são diferentes apenas durante sua declaração. Um dos tipos tem expansão de variáveis e suporta caracteres especiais, como os do C, por exemplo, \n para representar uma quebra de linha.
-Além desses dois tipos de strings, o Ruby tem diversas formas de declarar strings no código:
-Símbolo	Descrição
-aspas	String simples com expansão de variáveis.
-apóstrofes	String simples sem expansão de variáveis.
-<<MARCADOR	String multilinha com expansão de variáveis.
-%Q{ }	String multilinha com expansão de variáveis.
-%q{ }	String multilinha sem expansão de variáveis.
-Veja alguns exemplos de declaração de strings no Ruby:
-==============================================================
-<pre lang="ruby" line="1">
-irb(main):001:0> a = "texto" 
-=> "texto" 
-irb(main):002:0> b = 'texto' 
-=> "texto" 
-irb(main):003:0> c = "texto\nsegunda linha" 
-=> "texto\nsegunda linha" 
-irb(main):004:0> d = 'texto\nmesma linha' 
-=> "texto\\nmesma linha" 
-irb(main):005:0> e = "a = #{a} - é assim que se utiliza expansão de variáveis" 
-=> "a = texto - \303\251 assim que se utiliza expans\303\243o de vari\303\241veis" 
-irb(main):006:0> f = <<__ATE_O_FINAL 
-irb(main):007:0" esta é 
-irb(main):008:0" uma String 
-irb(main):009:0" bem grande e só tesmina 
-irb(main):010:0" quando encontrar o marcador __ATE_O_FINAL 
-irb(main):011:0" no início de uma linha 
-irb(main):012:0" __ATE_O_FINAL 
-=> "esta \303\251\numa String\nbem grande e s\303\263 termina\nquando encontrar o marcador __ATE_O_FINAL\nno in\303\255cio de uma linha\n" 
-irb(main):013:0> g = %Q{Esta também 
-irb(main):014:0" é uma String 
-irb(main):015:0" com mais de uma linha 
-irb(main):016:0" e também suporta #{a} 
-irb(main):017:0" expansão de variáveis 
-irb(main):018:0" } 
-=> "Esta tamb\303\251m\n\303\251 uma String\ncom mais de uma linha\ne tamb\303\251m suporta texto \nexpans\303\243o de vari\303\241veis\n" 
-irb(main):019:0> h = %q{Já 
-irb(main):020:0' esta 
-irb(main):021:0' que também é multi linha 
-irb(main):022:0' não suporta #{a} 
-irb(main):023:0' expansão de variáveis} 
-=> "J\303\241\nesta\nque tamb\303\251m \303\251 multi linha\nn\303\243o suporta \#{a}\nexpans\303\243o de vari\303\241veis" 
-</pre>
-Como podemos ver no exemplo anterior, as strings do Ruby suportam um recurso bastante interessante chamado expansão de variáveis, que, na verdade, suporta execução de código Ruby dentro de uma String. Para utilizar isso, basta colocar o código a ser executado dentro dos símbolos #{ e }. O código será executado, e o resultado da expressão será incluído dentro do texto original.
-Isso é bastante útil ao se trabalhar com output de texto, seja para exibição aos usuários, seja para criação de arquivos.
-Constantes
-O Ruby não tem algo que seja realmente constante, mas a linguagem tem um padrão que diz que variáveis declaradas com a primeira letra maiúscula são constantes. A linguagem não o impede de alterar o valor dessa constante se você realmente quiser: o Ruby vai apenas imprimir um aviso dizendo que você realmente não deveria estar fazendo isso, como mostra o exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):001:0> CONSTANTE = "asda" 
-=> "asda" 
-irb(main):002:0> CONSTANTE = 1 
-(irb):2: warning: already initialized constant CONSTANTE 
-=> 1 
-irb(main):003:0> Constante = 2 
-=> 2 
-irb(main):004:0> Constante = 5 
-(irb):4: warning: already initialized constant Constante 
-=> 5 
-</pre>
-Intervalos numéricos
-Além de números simples, é possível declarar intervalos numéricos no Ruby. O Ruby tem dois tipos de intervalos numéricos: o inclusivo, que inclui o último número, e o exclusivo, que não inclui esse número. Intervalos inclusivos e exclusivos são declarados utilizando os símbolos “..” e “...”, respectivamente, como pode ser visto no exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):001:0> a = 1..10 
-=> 1..10 
-irb(main):002:0> b = 1...10 
-=> 1...10 
-irb(main):003:0> a.each do |v| 
-irb(main):004:1* print "#{v} " 
-irb(main):005:1> end 
-1 2 3 4 5 6 7 8 9 10 => 1..10 
-irb(main):006:0> b.each do |v| 
-irb(main):007:1* print "#{v} " 
-irb(main):008:1> end 
-1 2 3 4 5 6 7 8 9 => 1...10 
-</pre>
-Arrays
-Arrays são coleções de valores. No Ruby, arrays não são tipados, ou seja, um array pode conter objetos de diversos tipos. Existem duas formas de se declarar um array genérico e uma forma extra de se declarar um array contendo apenas strings, como podemos ver no exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):001:0> arr = [] 
-=> [] 
-irb(main):002:0> arr = Array.new 
-=> [] 
-irb(main):003:0> arr = %w{ a b c } 
-=> ["a", "b", "c"] 
-Junto com os hashes, arrays são as estruturas de dados mais utilizadas na linguagem Ruby, principalmente pela flexibilidade e facilidade de iteração pelo conteúdo de um array. Como vimos nos outros exemplos, é bastante fácil percorrer um array utilizando o método each, ou each_with_index. Além desses, os arrays têm diversos outros métodos que serão muito úteis durante o desenvolvimento das aplicações Rails. Alguns desses estão na lista a seguir:
-irb(main):003:0> arr = %w{ a b c } 
-=> ["a", "b", "c"] 
-irb(main):004:0> arr.methods 
-=> ["select", "[]=", "inspect", "<<", "compact", "&", "clone", "last", "method", "public_methods", "partition", "delete_if", "empty?", "instance_variable_defined?", "equal?", "freeze", "each_index", "*", "grep", "sort!", "assoc", "+", "to_ary", "methods", "respond_to?", "-", "reject", "insert", "reverse!", "dup", "push", "delete", "instance_variables", "concat", "member?", "__id__", "|", "find", "eql?", "pack", "join", "reverse_each", "object_id", "require", "gem", "each_with_index", "collect!", "rassoc", "id", "at", "compact!", "singleton_methods", "index", "collect", "send", "all?", "reject!", "flatten", "slice", "taint", "length", "entries", "pop", "instance_variable_get", "frozen?", "transpose", "include?", "__send__", "instance_of?", "detect", "to_a", "indexes", "zip", "map!", "uniq", "type", "fetch", "protected_methods", "instance_eval", "map", "<=>", "values_at", "rindex", "display", "any?", "==", "===", "shift", "size", "sort", "instance_variable_set", "clear", "min", "kind_of?", "extend", "find_all", "to_s", "indices", "each", "class", "flatten!", "slice!", "hash", "first", "tainted?", "replace", "inject", "=~", "private_methods", "delete_at", "reverse", "nitems", "nil?", "untaint", "sort_by", "unshift", "max", "fill", "is_a?", "[]", "uniq!"] 
-</pre>
-Método	Descrição
-select	Recebe um bloco e retorna um novo array contendo todos os elementos para os quais o bloco retornou true.
-[]=	Define o valor de uma posição no array.
-[]	Retorna o valor da posição passada como parâmetro.
-last	Retorna o último item do array.
-empty?	Retorna verdadeiro se o array estiver vazio.
-equal?	Compara com outro array.
-each_index	Recebe um bloco e passa apenas os índices do array para o bloco.
-sort	Retorna um novo array contendo os itens deste ordenados. Opcionalmente recebe um bloco com dois parâmetros, o qual deve retornar qual dos itens é menor, fazendo assim uma comparação personalizada.
-sort!	Similar ao sort, mas altera o array de origem.
-+	Soma dois arrays, criando um novo com os itens de ambos.
--	Subtrai dois arrays, criando um novo com os itens do primeiro não contidos no segundo.
-push	Adiciona um item no final do array.
-pop	Retorna o último item do array e o remove do array.
-find	Recebe um bloco com um parâmetro e retorna o primeiro item para o qual o bloco retornar verdadeiro.
-clear	Remove todos os itens do array.
-shift	Retorna o primeiro item do array e o remove do array.
-first	Retorna o primeiro item do array.
-inject	Recebe um valor inicial e um bloco com dois parâmetros. O primeiro é o valor atual, e o segundo, o item atual do array, retorna o resultado da operação realizada no bloco. O próximo exemplo utiliza o método inject para somar todos os itens de um array numérico.
-<pre lang="ruby" line="1">
-irb(main):001:0> arr = [1, 2, 3, 4, 5, 6] 
-=> [1, 2, 3, 4, 5, 6] 
-irb(main):002:0> arr.inject(0) do |val, it| 
-irb(main):003:1* val + it 
-irb(main):004:1> end 
-=> 21 
-</pre>
-Existe ainda mais uma forma de criar um array no Ruby, que serve para criar métodos com uma lista variável de parâmetros. Para isso, basta declarar o último parâmetro de um método com o nome *nome, de forma que esse parâmetro seja um array contendo todos os parâmetros não declarados passados ao método, como pode ser visto no exemplo a seguir.
-<pre lang="ruby" line="1">
-irb(main):005:0> def parametros_variaveis(*arr) 
-irb(main):006:1> if arr 
-irb(main):007:2> arr.each do |v| 
-irb(main):008:3* print "#{v.class} - #{v}\n" 
-irb(main):009:3> end 
-irb(main):010:2> end 
-irb(main):011:1> end 
-=> nil 
-irb(main):012:0> parametros_variaveis 
-=> [] 
-irb(main):013:0> parametros_variaveis 1, "asda", :simb, :a => "teste", :arr => %w{a b c} 
-Fixnum - 1 
-String - asda 
-Symbol - simb 
-Hash - atestearrabc 
-=> [1, "asda", :simb, {:a=>"teste", :arr=>["a", "b", "c"]}] 
-</pre>
-Hashes
-Hashes representam outra construção bastante utilizada no código Ruby. Utilizaremos muitos hashes no código Rails que será escrito nos próximos capítulos.
-Hashes são semelhantes a arrays, mas não são simples coleções de objetos: são coleções do tipo chave=valor. Eles são tão comuns no código Ruby que existe até um operador especial para declarar hashes, que é o =>, que significa associado, ou seja, o valor à esquerda está associado ao valor à direita.
-Existem duas formas de se declarar um hash. A primeira é utilizando o atalho {}, e a segunda, utilizando o construtor da classe Hash, como no exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):001:0> h = {1 => "asda", "b" => 123} 
-=> {"b"=>123, 1=>"asda"} 
-irb(main):002:0> h1 = {} 
-=> {} 
-irb(main):003:0> h2 = Hash.new 
-=> {} 
-</pre>
-Hashes também têm alguns métodos que podem facilitar muito a vida dos programadores Ruby.
-<pre lang="ruby" line="1">
-irb(main):012:0> h.methods.sort 
-=> ["==", "===", "=~", "[]", "[]=", "__id__", "__send__", "all?", "any?", "class", "clear", "clone", "collect", "default", "default=", "default_proc", "delete", "delete_if", "detect", "display", "dup", "each", "each_key", "each_pair", "each_value", "each_with_index", "empty?", "entries", "eql?", "equal?", "extend", "fetch", "find", "find_all", "freeze", "frozen?", "gem", "grep", "has_key?", "has_value?", "hash", "id", "include?", "index", "indexes", "indices", "inject", "inspect", "instance_eval", "instance_of?", "instance_variable_defined?", "instance_variable_get", "instance_variable_set", "instance_variables", "invert", "is_a?", "key?", "keys", "kind_of?", "length", "map", "max", "member?", "merge", "merge!", "method", "methods", "min", "nil?", "object_id", "partition", "private_methods", "protected_methods", "public_methods", "rehash", "reject", "reject!", "replace", "require", "respond_to?", "select", "send", "shift", "singleton_methods", "size", "sort", "sort_by", "store", "taint", "tainted?", "to_a", "to_hash", "to_s", "type", "untaint", "update", "value?", "values", "values_at", "zip"] 
-</pre>
-Método	Descrição
-[]	Retorna o valor da chave passada como parâmetro.
-[]=	Atribui o valor da chave. 
-each	Executa um bloco com dois argumentos para cada posição do mapa.
-each_key	Executa um bloco com um argumento (a chave) para cada posição do mapa.
-each_value	Executa um bloco com um argumento (o valor) para cada posição do mapa.
-has_key?	Retorna verdadeiro se a chave existe no mapa.
-has_value?	Retorna verdadeiro se o valor corresponde a alguma das chaves do mapa.
-default=	Possibilita configurar qual valor o mapa vai retornar quando for buscado o valor para uma chave inexistente.
-default_proc	Idem a default=, mas executa um bloco para criar o valor para as novas chaves.
-delete	Remove o item correspondente à chave indicada do mapa, retornando o valor da chave.
-Símbolos
-Símbolos, no Ruby, são aqueles nomes malucos que começam com “:” por todo o código. São muito utilizados como chaves em hashes e em quaisquer lugares onde você precisar de um rótulo (label) para alguma coisa. Eles são basicamente strings, mas ocupam muito menos processamento do interpretador Ruby e muito menos memória do que strings normais.
-Strings podem ser transformadas em símbolos utilizando o método to_sym.
-Sempre que for definir chaves em hashes que servirão como nomes de parâmetros a métodos, ou precisar enviar uma mensagem a um objeto, um símbolo é sempre melhor do que uma string, pois utilizará muito menos memória, o que fará com que sua aplicação gaste menos recursos e se comporte de maneira mais sociável com o computador.
-Expressões regulares
-Expressões regulares consistem na forma mais fácil de extrair informações de um texto ou alterar textos com padrões razoavelmente complexos.
-O Ruby tem duas formas de declarar uma expressão regular e diversos métodos que recebem expressões regulares como parâmetros.
-Uma coisa a ser lembrada, e que facilita muito a vida dos programadores Ruby, é que expressões regulares fazem parte da linguagem no Ruby. Isso facilita muito seu uso em comparação às linguagens em que expressões regulares são implementadas em forma de uma biblioteca externa.
-As três formas de declarar uma expressão regular no Ruby são /ER/, %r{ER} ou por meio do método new da classe Regexp, como no exemplo a seguir:
-<pre lang="ruby" line="1">
-irb(main):001:0> er = /(.*?) .*/ 
-=> /(.*?) .*/ 
-irb(main):002:0> er = %r{(.*?) .*} 
-=> /(.*?) .*/ 
-irb(main):003:0> er= Regexp.new "(.*?) .*" 
-=> /(.*?) .*/ 
-</pre>
-Toda expressão regular é uma instância da classe Regexp e, da mesma forma que os números, a classe Regexp disponibiliza diversos métodos e operadores para facilitar as operações com expressões regulares, como podemos ver no exemplo a seguir.
-<pre lang="ruby" line="1">
-irb(main):001:0> er = /^[0-9]/ 
-=> /^[0-9]/ 
-irb(main):002:0> "123" =~ er 
-=> 0 
-irb(main):003:0> er =~ "123" 
-=> 0 
-irb(main):004:0> er =~ "abc" 
-=> nil 
-irb(main):005:0> er !~ "123" 
-=> false 
-irb(main):006:0> er !~ "abc" 
-=> true 
-irb(main):007:0> mt = /(..)\/(..)\/(....)/.match("12/05/2000") 
-=> #<MatchData:0xb7b116d0> 
-irb(main):008:0> mt.length 
-=> 4 
-irb(main):009:0> mt[0] 
-=> "12/05/2000" 
-irb(main):010:0> mt[1] 
-=> "12" 
-irb(main):011:0> mt[2] 
-=> "05" 
-irb(main):012:0> mt[3] 
-=> "2000" 
-irb(main):013:0> todo,dia,mes,ano = *(/(..)\/(..)\/(....)/.match("12/05/2000")) 
-=> ["12/05/2000", "12", "05", "2000"] 
-irb(main):014:0> todo 
-=> "12/05/2000" 
-irb(main):015:0> dia 
-=> "12" 
-irb(main):016:0> mes 
-=> "05" 
-irb(main):017:0> ano 
-=> "2000" 
-irb(main):018:0> "Urubatan".gsub(/ru/,"RU") 
-=> "URUbatan" 
-irb(main):019:0> re = /.*/ 
-=> /.*/ 
-irb(main):020:0> re.methods 
-=> ["inspect", "clone", "method", "public_methods", "instance_variable_defined?", "equal?", "freeze", "match", "methods", "respond_to?", "casefold?", "dup", "instance_variables", "options", "__id__", "eql?", "object_id", "require", "gem", "~", "id", "singleton_methods", "send", "taint", "frozen?", "instance_variable_get", "kcode", "__send__", "instance_of?", "to_a", "type", "protected_methods", "instance_eval", "==", "display", "===", "instance_variable_set", "kind_of?", "extend", "to_s", "hash", "class", "tainted?", "=~", "private_methods", "source", "nil?", "untaint", "is_a?"] 
-</pre>
-Alguns métodos importantes disponíveis na classe Regexp são:
-Método	Descrição
-=~	Procura pela expressão regular no texto e retorna o índice em que ela foi encontrada.
-!~	Informa se existe uma ocorrência da expressão regular no texto.
-match	Retorna um objeto do tipo MatchData, que contém ponteiros para os locais onde cada grupo da expressão regular foi encontrado. 
-O operador * do Ruby utilizado no exemplo, quando usado em um array, expande o array em variáveis. Dessa forma pode-se atribuir um array a uma quantidade de variáveis igual às posições do array.
-O método gsub da classe String demonstrado faz substituição de texto utilizando expressões regulares. É possível utilizar grupos na substituição, tornando o método ainda mais flexível.
-Classes e métodos
-Classes representam uma das bases da orientação a objetos no Ruby. Tudo no Ruby é um objeto, e todo objeto no Ruby é instância de uma classe. Por exemplo, 1 é uma instância da classe Fixnum, e todos os métodos dessa classe podem ser chamados nessa instância.
-Assim, classes também são objetos no Ruby, portanto, podem ter métodos próprios, ou seja, é possível definir métodos de classe, diferentemente do Java ou do C++, que têm métodos estáticos. Métodos de classe são herdados por classes descendentes da classe onde foram definidos e podem saber a qual objeto pertencem, pois nessa situação a palavra-chave self vai apontar para a classe e não para uma de suas instâncias.
-Para definir uma classe, é usada a palavra-chave class, seguida por um nome de uma constante, que será utilizado para referenciar aquela classe.
-Variáveis de instância são definidas por meio da nomenclatura @nome e variáveis de classe @@nome, mas se o seu código-fonte contiver muitas variáveis de classe, há um sério problema de design.
-Vejamos alguns exemplos para facilitar o entendimento:
-<pre lang="ruby" line="1">
-irb(main):001:0> class Carro 
-irb(main):002:1> def initialize(fabricante,modelo,ano) 
-irb(main):003:2> @fabricante = fabricante 
-irb(main):004:2> @modelo = modelo 
-irb(main):005:2> @ano = ano 
-irb(main):006:2> end 
-irb(main):007:1> attr_accessor :fabricante, :modelo, :ano 
-irb(main):008:1> end 
-=> nil 
-irb(main):009:0> clio = Carro.new "Renault", "clio", "2000" 
-=> #<Carro:0xb7af34f0 @modelo="clio", @fabricante="Renault", @ano="2000"> 
-irb(main):010:0> clio.modelo 
-=> "clio" 
-</pre>
-Herança é um dos pilares da orientação a objetos (os outros dois são encapsulamento e polimorfismo). O Ruby suporta herança utilizando o operador < na definição de uma classe.
-<pre lang="ruby" line="1">
-irb(main):001:0> class Carro 
-irb(main):002:1> def initialize(fabricante,modelo,ano) 
-irb(main):003:2> @fabricante = fabricante 
-irb(main):004:2> @modelo = modelo 
-irb(main):005:2> @ano = ano 
-irb(main):006:2> end 
-irb(main):007:1> attr_accessor :fabricante, :modelo, :ano 
-irb(main):008:1> end 
-=> nil 
-irb(main):009:0> class Clio < Carro 
-irb(main):010:1> @@fabricante = "Renault" 
-irb(main):011:1> @@modelo = "clio" 
-irb(main):012:1> def initialize(ano) 
-irb(main):013:2> super(@@fabricante, @@modelo, ano) 
-irb(main):014:2> end 
-irb(main):015:1> end 
-=> nil 
-irb(main):016:0> clio = Clio.new(2003) 
-=> #<Clio:0xb7b5a7cc @modelo="clio", @fabricante="Renault", @ano=2003>
-</pre>
-Métodos de classe são bastante úteis no Ruby, pois podem saber a que classe pertencem. Para simplificar o exemplo, podemos também utilizá-los para criar uma fábrica de carros:
-<pre lang="ruby" line="1">
-irb(main):017:0> class Fabrica 
-irb(main):018:1> def self.clio 
-irb(main):019:2> Clio.new(2003) 
-irb(main):020:2> end 
-irb(main):021:1> def self.megane 
-irb(main):022:2> Carro.new "Renault", "megane", 2003 
-irb(main):023:2> end 
-irb(main):024:1> end 
-=> nil 
-irb(main):025:0> Fabrica.clio 
-=> #<Clio:0xb7b4e274 @modelo="clio", @fabricante="Renault", @ano=2003> 
-irb(main):026:0> Fabrica.megane 
-=> #<Carro:0xb7b4ca14 @modelo="megane", @fabricante="Renault", @ano=2003> 
-</pre>
-Como foi possível perceber, para criar um método de classe é usada a notação self.método. É possível definir novos métodos em classes a qualquer momento, bem como definir novos métodos apenas em uma instância de uma classe, o que internamente vai fazer com que uma nova classe anônima seja criada apenas para aquele objeto.
-Classes têm alguns métodos interessantes para entendermos o código Rails que será usado nos próximos capítulos. A seguir, veja uma breve lista.
-<pre lang="ruby" line="1">
-Object.methods.sort 
-=> ["<", "<=", "<=>", "==", "===", "=~", ">", ">=", "__id__", "__send__", "allocate", "ancestors", "autoload", "autoload?", "class", "class_eval", "class_variable_defined?", "class_variables", "clone", "const_defined?", "const_get", "const_missing", "const_set", "constants", "display", "dup", "eql?", "equal?", "extend", "freeze", "frozen?", "gem", "hash", "id", "include?", "included_modules", "inspect", "instance_eval", "instance_method", "instance_methods", "instance_of?", "instance_variable_defined?", "instance_variable_get", "instance_variable_set", "instance_variables", "is_a?", "kind_of?", "method", "method_defined?", "methods", "module_eval", "name", "new", "nil?", "object_id", "private_class_method", "private_instance_methods", "private_method_defined?", "private_methods", "protected_instance_methods", "protected_method_defined?", "protected_methods", "public_class_method", "public_instance_methods", "public_method_defined?", "public_methods", "require", "respond_to?", "send", "singleton_methods", "superclass", "taint", "tainted?", "to_a", "to_s", "type", "untaint"]
-</pre>
-Método	Descrição
-class	Retorna a classe de um objeto.
-class_eval	Executa uma string contendo código-fonte Ruby no contexto da classe.
-class_variable_defined?	Informa se uma variável está definida nessa classe.
-class_variables	Lista todas as variáveis de classe.
-const_defined?	Informa se existe uma constante definida na classe.
-const_get	Lê o valor de uma constante.
-const_set	Grava o valor em uma constante ou cria uma nova.
-constants	Lista todas as constantes definidas na classe.
-instance_eval	Executa uma string contendo código-fonte Ruby no contexto de uma instância da classe.
-Método	Descrição (cont.)
-instance_methods	Lista todos os métodos de instância da classe.
-instance_variable_defined?	Informa se uma variável está definida para as instâncias da classe.
-instance_variable_get	Lê o valor de uma variável de instância. 
-instance_variable_set	Cria ou altera o valor de uma variável de instância.
-Métodos
-Uma coisa interessante sobre métodos no Ruby é que eles não existem.
-É exatamente isso: não há métodos em Ruby! A diferença é bastante sutil, mas ajuda a entender melhor como as coisas funcionam. No Ruby não se chama um método de objeto: envia-se uma mensagem para um objeto, e esta pode ter parâmetros, mas sempre tem um retorno.
-É como se cada objeto tivesse uma caixa de correio interna, que só aceita mensagens para destinatários conhecidos, e todos os destinatários desconhecidos vão para o mesmo lugar: uma caixa com o nome de method_missing.
-Isso permite que métodos inexistentes sejam adicionados apenas no momento em que se tornam necessários. Veremos isso acontecer bastante no código do Rails, cuja leitura recomendo após a conclusão deste livro, pois a melhor forma de entender profundamente como o Rails funciona é lendo o código-fonte do Rails.
-Aqui está um exemplo de utilização do method_missing:
-<pre lang="ruby" line="1">
-class Teste 
-	def method_missing(method, *args) 
-		print "Método #{method} chamado na classe Teste, com os argumentos #{args.join(', ')}\n"
-	end 
-end 
-t = Teste.new 
-t.imprimir 
-t.qualquer_coisa 1, 2, 3, "asd", :teste => 1
-</pre>
-Não é considerada uma boa prática utilizar o method_missing o tempo todo, principalmente porque, no exemplo mostrado, se fosse feita a pergunta t.respond_to? :imprimir, o objeto diria que não responde à mensagem, mas ela seria enviada. Tudo funciona sem problemas, o que cria um objeto com comportamento inconsistente.
-Uma melhor abordagem seria a utilização do define_method para criar uma caixa de correspondências, no momento em que esta se tornar necessária, da forma como o attr_accessor faz. Para demonstrar isso, criaremos um método que define propriedades em um objeto, semelhante ao attr_accessor. Para tal, vamos utilizar o módulo que é assunto da próxima seção.
-<pre lang="ruby" line="1">
-module Propriedades 
-	def propriedade(nome) 
-		ivarname = "@#{nome}".to_sym 
-		self.send :define_method, nome do 
-			self.instance_variable_get ivarname 
-		end 
-		self.send :define_method, "#{nome}=".to_sym do |val| 
-			self.instance_variable_set ivarname, val 
-		end 
-	end 
-end 
 
-class Teste 
-	extend Propriedades 
-	propriedade :nome 
-end 
-t = Teste.new 
-t.nome="urubatan" 
-print t.inspect 
-print "\n" 
-<pre>
-Módulos
+{{intro/15scope.rb}}
+
+Esse exemplo também demonstra uma das convenções para a nomenclatura de variáveis apresentada no exemplo anterior, ou seja, variáveis que não têm seus nomes iniciados por @, @@ ou $ são variáveis locais no contexto onde foram definidas.
+
+É possível também passar blocos de código como parâmetros para métodos. Isso é muito usado na API padrão do Ruby, e pode ser visto inclusive no exemplo anterior, quando passamos um bloco de código como parâmetro para o método each da classe Array. No próximo exemplo, veremos como criar um método que recebe um bloco de código como parâmetro, ou seja, como utilizar um bloco de código passado para um método. Não será mostrado como armazenar um bloco de código em uma variável, porque nesse caso, o bloco de código se transforma em uma instância da classe Proc e esse é um assunto para o próximo capítulo.
+
+{{intro/16blockparam.rb}}
+
+Podemos também passar parâmetros para blocos recebidos nos métodos:
+
+{{intro/17blockparam.rb}}
+
+<h3>Procs</h3>
+
+Procs são muito parecidos com blocos de código ou closures simples, que foram vistos na seção anterior. A diferença básica é que podemos armazenar um proc em uma variável, e isso torna um pouco mais “caro” para o Ruby a implementação de procs do que simples blocos de código. Por isso, tiveram a brilhante ideia de, internamente no Ruby, utilizar dois elementos diferentes para representar essas duas entidades que, para o programador usuário da linguagem, são praticamente iguais.
+
+Além disso, o Ruby converte blocos de código em procs de forma transparente, fazendo com que na maioria das situações não seja necessário se preocupar com esse tipo de detalhe. Para deixar isso um pouco mais claro veremos alguns exemplos a seguir:
+
+Converter um bloco recebido em um proc.
+
+{{intro/18proc.rb}}
+
+Criar uma variável do tipo Proc de duas formas diferentes.
+
+{{intro/19proc.rb}}
+
+{{intro/20lambda.rb}}
+
+Nestes exemplos, foi possível verificar as duas formas de criar um objeto do tipo Proc: utilizando o construtor da classe Proc (leia mais sobre construtores na seção sobre classes) ou utilizando a palavra-chave lambda, de modo semelhante ao Python.
+
+Como Proc é uma classe, objetos desse tipo têm diversos métodos. Vejamos alguns destes de forma mais detalhada:
+
+{{intro/21procclass.rb}}
+
+Diversos métodos padrão da classe Object do Ruby são listados, pois como todas as classes, a classe Proc também é descendente de Object, ou seja, procs são objetos comuns no Ruby. Retomando o tópico anterior, existem alguns métodos que são mais interessantes para nós neste momento:
+
+<table width="100%" border="1">
+<tr><th>Método</th><th>Descrição</th></tr>
+<tr><td>call</td><td>Utilizado para executar o proc, os parâmetros que forem definidos no bloco são passados como parâmetros para o método call.</td></tr>
+<tr><td>[]  </td><td>Alias para o método call, ou seja, podemos executar um proc com a sintaxe: p[parâmetros].</td></tr>
+<tr><td>arity</td><td>Informa o número de parâmetros definidos nesse proc.</td></tr>
+<tr><td>binding</td><td>Retorna a Binding correspondente ao local onde foi definido o bloco de código que deu origem a esse proc.</td></tr>
+</table>
+<h3>Números</h3>
+Como em todas as linguagens de programação, o Ruby tem suporte a processamento numérico, mas diferente de muitas das linguagens, mesmo algumas das supostamente orientadas a objetos, no Ruby todos os números são objetos, portanto, todos são instâncias de alguma classe.
+
+O Ruby tem três classes que representam números. São elas:
+<table width="100%" border="1">
+<tr><th>Classe</th><th>Descrição</th></tr>
+<tr><td>Fixnum</td><td>Representa inteiros de -1073741824 a 1073741823.</td></tr>
+<tr><td>Bignum</td><td>Representa inteiros fora do intervalo da classe Fixnum.</td></tr>
+<tr><td>Float</td><td>Representa números de ponto flutuante.</td></tr>
+</table>
+
+Para definir um número de ponto flutuante basta utilizar um ponto “.”. Se você quiser muito separar milhares, pode utilizar o _, mas não recomendo a utilização, pois o visual da sintaxe fica poluído.
+
+A seguir estão alguns exemplos de números no Ruby.
+
+{{intro/22numberandclass.rb}}
+
+Como já foi dito, o Ruby utiliza duas classes diferentes para tratar inteiros. Não é necessário se preocupar com isso, pois a conversão entre esses tipos é feita automaticamente pelo interpretador, ou seja, se um número ficar grande demais para caber em um Fixnum, ele será convertido para Bignum. Caso ele volte a estar no intervalo do Fixnum, essa classe será utilizada novamente.
+
+<h3>Valores booleanos</h3>
+Valores booleanos, como na maior parte das linguagens de programação, são representados por true e false, ou verdadeiro e falso, respectivamente. Entretanto, no Ruby existe uma particularidade: a palavra-chave nil, que representa “nenhum objeto”, é considerada como falsa em qualquer comparação. Portanto, existem dois valores para falso, e quaisquer outros valores serão considerados como verdadeiros. Resumindo, as comparações booleanas servem também para verificar se uma variável tem um valor.
+
+Veja alguns exemplos que exemplificam melhor o que você acabou de ler:
+
+{{intro/23boolean.rb}}
+
+<h3>Strings</h3>
+
+Strings são o tipo de dados utilizados para representar texto dentro do código. O Ruby tem dois tipos de string, que são diferentes apenas durante sua declaração. Um dos tipos tem expansão de variáveis e suporta caracteres especiais, como os do C, por exemplo, \n para representar uma quebra de linha.
+
+Além desses dois tipos de strings, o Ruby tem diversas formas de declarar strings no código:
+
+<table width="100%" border="1">
+<tr><th>Símbolo</th><th>Descrição</th></tr>
+<tr><td>aspas</td><td>String simples com expansão de variáveis.</td></tr>
+<tr><td>apóstrofes</td><td>String simples sem expansão de variáveis.</td></tr>
+<tr><td><<MARCADOR</td><td>String multilinha com expansão de variáveis.</td></tr>
+<tr><td>%Q{ }</td><td>String multilinha com expansão de variáveis.</td></tr>
+<tr><td>%q{ }</td><td>String multilinha sem expansão de variáveis.</td></tr>
+</table>
+Veja alguns exemplos de declaração de strings no Ruby:
+
+{{intro/24strings.rb}}
+
+Como podemos ver no exemplo anterior, as strings do Ruby suportam um recurso bastante interessante chamado expansão de variáveis, que, na verdade, suporta execução de código Ruby dentro de uma String. Para utilizar isso, basta colocar o código a ser executado dentro dos símbolos #{ e }. O código será executado, e o resultado da expressão será incluído dentro do texto original.
+
+Isso é bastante útil ao se trabalhar com output de texto, seja para exibição aos usuários, seja para criação de arquivos.
+
+<h3>Constantes</h3>
+
+O Ruby não tem algo que seja realmente constante, mas a linguagem tem um padrão que diz que variáveis declaradas com a primeira letra maiúscula são constantes. A linguagem não o impede de alterar o valor dessa constante se você realmente quiser: o Ruby vai apenas imprimir um aviso dizendo que você realmente não deveria estar fazendo isso, como mostra o exemplo a seguir:
+
+{{intro/25constants.rb}}
+
+<h3>Intervalos numéricos</h3>
+
+Além de números simples, é possível declarar intervalos numéricos no Ruby. O Ruby tem dois tipos de intervalos numéricos: o inclusivo, que inclui o último número, e o exclusivo, que não inclui esse número. Intervalos inclusivos e exclusivos são declarados utilizando os símbolos “..” e “...”, respectivamente, como pode ser visto no exemplo a seguir:
+
+{{intro/26numericintervals.rb}}
+
+<h3>Arrays</h3>
+
+Arrays são coleções de valores. No Ruby, arrays não são tipados, ou seja, um array pode conter objetos de diversos tipos. Existem duas formas de se declarar um array genérico e uma forma extra de se declarar um array contendo apenas strings, como podemos ver no exemplo a seguir:
+
+{{intro/27arrays.rb}}
+
+Junto com os hashes, arrays são as estruturas de dados mais utilizadas na linguagem Ruby, principalmente pela flexibilidade e facilidade de iteração pelo conteúdo de um array. Como vimos nos outros exemplos, é bastante fácil percorrer um array utilizando o método each, ou each_with_index. Além desses, os arrays têm diversos outros métodos que serão muito úteis durante o desenvolvimento das aplicações Rails. Alguns desses estão na lista a seguir:
+
+<table width="100%" border="1">
+<tr><th>Método</th><th>Descrição</th></tr>
+<tr><td>select</td><td>Recebe um bloco e retorna um novo array contendo todos os elementos para os quais o bloco retornou true.</td></tr>
+<tr><td>[]=</td><td>Define o valor de uma posição no array.</td></tr>
+<tr><td>[]</td><td>Retorna o valor da posição passada como parâmetro.</td></tr>
+<tr><td>last</td><td>Retorna o último item do array.</td></tr>
+<tr><td>empty?</td><td>Retorna verdadeiro se o array estiver vazio.</td></tr>
+<tr><td>equal?</td><td>Compara com outro array.</td></tr>
+<tr><td>each_index</td><td>Recebe um bloco e passa apenas os índices do array para o bloco.</td></tr>
+<tr><td>sort</td><td>Retorna um novo array contendo os itens deste ordenados. Opcionalmente recebe um bloco com dois parâmetros, o qual deve retornar qual dos itens é menor, fazendo assim uma comparação personalizada.</td></tr>
+<tr><td>sort!</td><td>Similar ao sort, mas altera o array de origem.</td></tr>
+<tr><td>+</td><td>Soma dois arrays, criando um novo com os itens de ambos.</td></tr>
+<tr><td>-</td><td>Subtrai dois arrays, criando um novo com os itens do primeiro não contidos no segundo.</td></tr>
+<tr><td>push</td><td>Adiciona um item no final do array.</td></tr>
+<tr><td>pop </td><td>Retorna o último item do array e o remove do array.</td></tr>
+<tr><td>find</td><td>Recebe um bloco com um parâmetro e retorna o primeiro item para o qual o bloco retornar verdadeiro.</td></tr>
+<tr><td>clear</td><td>Remove todos os itens do array.</td></tr>
+<tr><td>shift</td><td>Retorna o primeiro item do array e o remove do array.</td></tr>
+<tr><td>first</td><td>Retorna o primeiro item do array.</td></tr>
+<tr><td>inject</td><td>Recebe um valor inicial e um bloco com dois parâmetros. O primeiro é o valor atual, e o segundo, o item atual do array, retorna o resultado da operação realizada no bloco. O próximo exemplo utiliza o método inject para somar todos os itens de um array numérico.</td></tr>
+</table>
+{{intro/28inject.rb}}
+
+Existe ainda mais uma forma de criar um array no Ruby, que serve para criar métodos com uma lista variável de parâmetros. Para isso, basta declarar o último parâmetro de um método com o nome *nome, de forma que esse parâmetro seja um array contendo todos os parâmetros não declarados passados ao método, como pode ser visto no exemplo a seguir.
+
+{{intro/29varargs.rb}}
+
+<h3>Hashes</h3>
+
+Hashes representam outra construção bastante utilizada no código Ruby. Utilizaremos muitos hashes no código Rails que será escrito nos próximos capítulos.
+
+Hashes são semelhantes a arrays, mas não são simples coleções de objetos: são coleções do tipo chave=valor. Eles são tão comuns no código Ruby que existe até um operador especial para declarar hashes, que é o =>, que significa associado, ou seja, o valor à esquerda está associado ao valor à direita.
+
+Existem duas formas de se declarar um hash. A primeira é utilizando o atalho {}, e a segunda, utilizando o construtor da classe Hash, como no exemplo a seguir:
+
+{{intro/30hashes.rb}}
+
+Hashes também têm alguns métodos que podem facilitar muito a vida dos programadores Ruby como pode ser visto na tabela abaixo.
+
+<table width="100%" border="1">
+<tr><td>Método</td><td>Descrição</td></tr>
+<tr><td>[]  </td><td>Retorna o valor da chave passada como parâmetro.</td></tr>
+<tr><td>[]= </td><td>Atribui o valor da chave. </td></tr>
+<tr><td>each</td><td>Executa um bloco com dois argumentos para cada posição do mapa.</td></tr>
+<tr><td>each_key    </td><td>Executa um bloco com um argumento (a chave) para cada posição do mapa.</td></tr>
+<tr><td>each_value  </td><td>Executa um bloco com um argumento (o valor) para cada posição do mapa.</td></tr>
+<tr><td>has_key?</td><td>Retorna verdadeiro se a chave existe no mapa.</td></tr>
+<tr><td>has_value?</td><td>Retorna verdadeiro se o valor corresponde a alguma das chaves do mapa.</td></tr>
+<tr><td>default=</td><td>Possibilita configurar qual valor o mapa vai retornar quando for buscado o valor para uma chave inexistente.</td></tr>
+<tr><td>default_proc</td><td>Idem a default=, mas executa um bloco para criar o valor para as novas chaves.</td></tr>
+<tr><td>delete</td><td>Remove o item correspondente à chave indicada do mapa, retornando o valor da chave.</td></tr>
+</table>
+
+<h3>Símbolos</h3>
+
+Símbolos, no Ruby, são aqueles nomes malucos que começam com “:” por todo o código. São muito utilizados como chaves em hashes e em quaisquer lugares onde você precisar de um rótulo (label) para alguma coisa. Eles são basicamente strings, mas ocupam muito menos processamento do interpretador Ruby e muito menos memória do que strings normais.
+
+Strings podem ser transformadas em símbolos utilizando o método to_sym.
+
+Sempre que for definir chaves em hashes que servirão como nomes de parâmetros a métodos, ou precisar enviar uma mensagem a um objeto, um símbolo é sempre melhor do que uma string, pois utilizará muito menos memória, o que fará com que sua aplicação gaste menos recursos e se comporte de maneira mais sociável com o computador.
+
+<h3>Expressões regulares</h3>
+
+Expressões regulares consistem na forma mais fácil de extrair informações de um texto ou alterar textos com padrões razoavelmente complexos.
+
+O Ruby tem duas formas de declarar uma expressão regular e diversos métodos que recebem expressões regulares como parâmetros.
+
+Uma coisa a ser lembrada, e que facilita muito a vida dos programadores Ruby, é que expressões regulares fazem parte da linguagem no Ruby. Isso facilita muito seu uso em comparação às linguagens em que expressões regulares são implementadas em forma de uma biblioteca externa.
+
+As três formas de declarar uma expressão regular no Ruby são /ER/, %r{ER} ou por meio do método new da classe Regexp, como no exemplo a seguir:
+
+{{intro/31regexp.rb}}
+
+Toda expressão regular é uma instância da classe Regexp e, da mesma forma que os números, a classe Regexp disponibiliza diversos métodos e operadores para facilitar as operações com expressões regulares, como podemos ver no exemplo a seguir.
+
+Alguns métodos importantes disponíveis na classe Regexp são:
+
+<table width="100%" border="1">
+<tr><th>Método</th><th>Descrição</th></tr>
+<tr><td>=~  </td><td>Procura pela expressão regular no texto e retorna o índice em que ela foi encontrada.</td></tr>
+<tr><td>!~  </td><td>Informa se existe uma ocorrência da expressão regular no texto.</td></tr>
+<tr><td>match</td><td>Retorna um objeto do tipo MatchData, que contém ponteiros para os locais onde cada grupo da expressão regular foi encontrado. </td></tr>
+</table>
+
+O operador * do Ruby utilizado no exemplo, quando usado em um array, expande o array em variáveis. Dessa forma pode-se atribuir um array a uma quantidade de variáveis igual às posições do array.
+
+O método gsub da classe String demonstrado faz substituição de texto utilizando expressões regulares. É possível utilizar grupos na substituição, tornando o método ainda mais flexível.
+
+<h3>Classes e métodos</h3>
+
+Classes representam uma das bases da orientação a objetos no Ruby. Tudo no Ruby é um objeto, e todo objeto no Ruby é instância de uma classe. Por exemplo, 1 é uma instância da classe Fixnum, e todos os métodos dessa classe podem ser chamados nessa instância.
+
+Assim, classes também são objetos no Ruby, portanto, podem ter métodos próprios, ou seja, é possível definir métodos de classe, diferentemente do Java ou do C++, que têm métodos estáticos. Métodos de classe são herdados por classes descendentes da classe onde foram definidos e podem saber a qual objeto pertencem, pois nessa situação a palavra-chave self vai apontar para a classe e não para uma de suas instâncias.
+
+Para definir uma classe, é usada a palavra-chave class, seguida por um nome de uma constante, que será utilizado para referenciar aquela classe.
+
+Variáveis de instância são definidas por meio da nomenclatura @nome e variáveis de classe @@nome, mas se o seu código-fonte contiver muitas variáveis de classe, há um sério problema de design.
+
+Vejamos alguns exemplos para facilitar o entendimento:
+
+{{intro/32class.rb}}
+
+Herança é um dos pilares da orientação a objetos (os outros dois são encapsulamento e polimorfismo). O Ruby suporta herança utilizando o operador < na definição de uma classe.
+
+{{intro/33inheritance.rb}}
+
+Métodos de classe são bastante úteis no Ruby, pois podem saber a que classe pertencem. Para simplificar o exemplo, podemos também utilizá-los para criar uma fábrica de carros:
+
+{{intro/34classmethods.rb}}
+
+Como foi possível perceber, para criar um método de classe é usada a notação self.método. É possível definir novos métodos em classes a qualquer momento, bem como definir novos métodos apenas em uma instância de uma classe, o que internamente vai fazer com que uma nova classe anônima seja criada apenas para aquele objeto.
+
+Classes têm alguns métodos interessantes para entendermos o código Rails que será usado nos próximos capítulos. A seguir, veja uma breve lista.
+
+<table width="100%" border="1">
+<tr><th>Método</th><th>Descrição</th></tr>
+<tr><td>class</td><td>Retorna a classe de um objeto.</td></tr>
+<tr><td>class_eval  </td><td>Executa uma string contendo código-fonte Ruby no contexto da classe.</td></tr>
+<tr><td>class_variable_defined?</td><td>Informa se uma variável está definida nessa classe.</td></tr>
+<tr><td>class_variables</td><td>Lista todas as variáveis de classe.</td></tr>
+<tr><td>const_defined?</td><td>Informa se existe uma constante definida na classe.</td></tr>
+<tr><td>const_get   </td><td>Lê o valor de uma constante.</td></tr>
+<tr><td>const_set   </td><td>Grava o valor em uma constante ou cria uma nova.</td></tr>
+<tr><td>constants   </td><td>Lista todas as constantes definidas na classe.</td></tr>
+<tr><td>instance_eval</td><td>Executa uma string contendo código-fonte Ruby no contexto de uma instância da classe.</td></tr>
+<tr><td>instance_methods    </td><td>Lista todos os métodos de instância da classe.</td></tr>
+<tr><td>instance_variable_defined?</td><td>Informa se uma variável está definida para as instâncias da classe.</td></tr>
+<tr><td>instance_variable_get</td><td>Lê o valor de uma variável de instância. </td></tr>
+<tr><td>instance_variable_set</td><td>Cria ou altera o valor de uma variável de instância.</td></tr>
+</table>
+
+<h3>Métodos</h3>
+Uma coisa interessante sobre métodos no Ruby é que eles não existem.
+
+É exatamente isso: não há métodos em Ruby! A diferença é bastante sutil, mas ajuda a entender melhor como as coisas funcionam. No Ruby não se chama um método de objeto: envia-se uma mensagem para um objeto, e esta pode ter parâmetros, mas sempre tem um retorno.
+
+É como se cada objeto tivesse uma caixa de correio interna, que só aceita mensagens para destinatários conhecidos, e todos os destinatários desconhecidos vão para o mesmo lugar: uma caixa com o nome de method_missing.
+
+Isso permite que métodos inexistentes sejam adicionados apenas no momento em que se tornam necessários. Veremos isso acontecer bastante no código do Rails, cuja leitura recomendo após a conclusão deste livro, pois a melhor forma de entender profundamente como o Rails funciona é lendo o código-fonte do Rails.
+
+Aqui está um exemplo de utilização do method_missing:
+
+{{intro/35method_missing.rb}}
+
+Não é considerada uma boa prática utilizar o method_missing o tempo todo, principalmente porque, no exemplo mostrado, se fosse feita a pergunta t.respond_to? :imprimir, o objeto diria que não responde à mensagem, mas ela seria enviada. Tudo funciona sem problemas, o que cria um objeto com comportamento inconsistente.
+
+Uma melhor abordagem seria a utilização do define_method para criar uma caixa de correspondências, no momento em que esta se tornar necessária, da forma como o attr_accessor faz. Para demonstrar isso, criaremos um método que define propriedades em um objeto, semelhante ao attr_accessor. Para tal, vamos utilizar o módulo que é assunto da próxima seção.
+
+{{intro/36define_method.rb}}
+
+<h3>Módulos</h3>
+
 Módulos no Ruby são repositórios de coisas. Essa foi a melhor explicação de módulos que consegui, falando de uma forma bem genérica.
+
 Eles podem conter classes, sendo usados como pacotes de classes para organizar um domínio muito grande. Ou podem conter métodos para serem utilizados como “mixins”, um conceito bastante interessante que, utilizado junto com as classes abertas, é parcialmente responsável por toda a flexibilidade do Ruby.
+
 Para utilizar módulos como organizadores de classes, basta fazer como neste exemplo:
-<pre lang="ruby" line="1">
-module Administracao 
-	class Cliente 
-		attr_accessor :nome 
-		def initialize 
-			@nome = "" 
-		end 
-	end 
-end 
-</pre>
+
+{{intro/37modules.rb}}
+
 Utilizar métodos como mixins é bastante semelhante ao exemplo anterior, mas dentro do módulo são definidos métodos, e não classes, como no exemplo a seguir.
-<pre lang="ruby" line="1">
-class Teste 
-	def ola_mundo 
-		print "ola mundo\n" 
-	end 
-	def self.ola_mundo 
-		print "ola mundo da classe\n" 
-	end 
-end 
-Teste.ola_mundo 
-t = Teste.new 
-t.ola_mundo 
-module MixinTest 
-	def self.included(base) 
-		base.send :include, InstanceMethods 
-		base.send :extend, ClassMethods 
-	end 
-	module ClassMethods 
-		def metodo_de_classe 
-			print "Novo método de classe definido no módulo 'ClassMethods'\n" 
-		end 
-	end 
-	module InstanceMethods 
-		def metodo_de_instancia 
-			print "Novo método de instância definido no módulo 'InstanceMethods'\n" 
-		end 
-	end 
-end 
-class Teste 
-	include MixinTest 
-end 
-Teste.metodo_de_classe 
-t.metodo_de_instancia 
-</pre>
+
+{{intro/38modlemixin.rb}}
+
 Em qualquer classe, pode-se chamar o método include passando um módulo como parâmetro, e os métodos desse módulo estarão disponíveis para todas as instâncias dessa classe.
+
 Se o método extend for utilizado, os métodos do módulo estarão disponíveis para a classe e não para suas instâncias.
+
 O método send utilizado no exemplo envia uma mensagem para um objeto. No caso, o objeto era a classe Teste.
-Operadores condicionais e loops
+
+<h2>Operadores condicionais e loops</h2>
 Ruby é uma linguagem dinâmica, mas também imperativa, e todas as linguagens imperativas têm estruturas de controle de fluxo e loop. Nas próximas seções veremos quais estruturas desse tipo o Ruby contém e como utilizá-las.
-If / elsif / else / end 
+
+<h3>If / elsif / else / end </h3>
+
 A estrutura if é utilizada para executar um conjunto de instruções. Se a condição for verdadeira, não é necessário um then, e o if pode ser utilizado no final de uma instrução também. Dessa forma, o bloco anterior de código só será executado se a condição for verdadeira.
-<pre lang="ruby" line="1">
-irb(main):001:0> a = 0 
-=> 0 
-irb(main):002:0> if a==0 
-irb(main):003:1> print "zero" 
-irb(main):004:1> elsif a==1 
-irb(main):005:1> print "um" 
-irb(main):006:1> else 
-irb(main):007:1* print "não sei que número é este" 
-irb(main):008:1> end 
-zero=> nil 
-irb(main):009:0> b = 5 if a!=1 
-=> 5 
-</pre>
-unless else end 
+
+{{intro/39ifelse.rb}}
+
+<h3>unless else end </h3>
+
 O unless é um atalho, mais fácil de ler para um “if not” em inglês. Ele facilita a leitura do código quando utilizado corretamente, mas semanticamente é um “if not” e pode ser utilizado também no final de uma sentença da mesma forma que o if.
-<pre lang="ruby" line="1">
-irb(main):001:0> a = 1 
-=> 1 
-irb(main):002:0> unless a==0 
-irb(main):003:1> print "não é zero\n" 
-irb(main):004:1> else 
-irb(main):005:1* print "a é zero\n" 
-irb(main):006:1> end 
-não é zero 
-=> nil 
-irb(main):007:0> b = 6 unless b 
-=> 6 
-irb(main):008:0> b = 7 unless b 
-=> nil 
-</pre>
+
+{{intro/40unlesslseend.rb}}
+
 Como pode ser visto no exemplo, o unless pode ser utilizado para definir o valor de uma variável apenas se ela ainda não tiver um valor. É necessário apenas tomar cuidado com essa abordagem se o valor esperado é um valor booleano.
-case / when / else / end 
+
+<h3>case / when / else / end </h3>
+
 Case é um atalho mais organizado e semântico para uma sequência de elsif. O comando case do Ruby é bastante flexível, mais do que em Java ou C++, por exemplo. Isso porque no Ruby ele pode ser utilizado com qualquer tipo de objeto e não apenas com números. Só não é possível misturar objetos, como pode ser visto no exemplo a seguir.
-<pre lang="ruby" line="1">
-irb(main):001:0> a = 5 
-=> 5 
-irb(main):002:0> case a 
-irb(main):003:1> when 1..3 
-irb(main):004:1> puts "a entre 1 e 3\n" 
-irb(main):005:1> when 4 
-irb(main):006:1> puts "a=4\n" 
-irb(main):007:1> else 
-irb(main):008:1* puts "nenhuma das anteriores\n" 
-irb(main):009:1> end 
-nenhuma das anteriores 
-=> nil 
-irb(main):010:0> a = "b" 
-=> "b" 
-irb(main):011:0> case a 
-irb(main):012:1> when "a" 
-irb(main):013:1> puts "a\n" 
-irb(main):014:1> when "b" 
-irb(main):015:1> puts "b" 
-irb(main):016:1> else 
-irb(main):017:1* puts "outra letra" 
-irb(main):018:1> end 
-b 
-=> nil 
-</pre>
-Operadores de loop
+
+{{intro/41casewhenelse.rb}}
+
+<h3>Operadores de loop</h3>
+
 Os operadores apresentados nesta seção podem ser utilizados com qualquer um dos loops que serão apresentados nas próximas seções:
+
 Operador	Descrição
 break	Sai do loop atual. 
 next	Executa o próximo passo do loop.
 return	Sai do loop e do método atual.
 redo	Reinicia o loop atual. 
+
 while
 O while é um loop bastante flexível, pois permite o controle da condição do loop, podendo ser utilizado com qualquer condição booleana, derivada da comparação de qualquer tipo de objeto.
 <pre lang="ruby" line="1">
