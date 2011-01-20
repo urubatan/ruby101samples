@@ -1,2 +1,4 @@
 source "http://rubygems.org"
-gem "maruku"
+group :rake do
+  gem "codemerger", :require => "codemerger/rake_tasks"
+end
